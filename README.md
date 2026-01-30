@@ -237,5 +237,3 @@ MIT
 ## Acknowledgments
 
 - Dataset: [Kaggle Customer Support Tickets](https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset)
-- Built with Google Gemini 3 Flash Preview
-- Powered by LangGraph and LangChain
