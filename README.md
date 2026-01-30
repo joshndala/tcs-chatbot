@@ -178,15 +178,13 @@ tcs-chatbot/
 
 ## Configuration
 
-Key settings in `.env`:
+Add your Google API key to `.env`:
 
 ```env
 GOOGLE_API_KEY=your_api_key_here
-MODEL_NAME=gemini-3-flash-preview
-TEMPERATURE=0.1  # Low temperature for precise code generation
-CHUNK_SIZE=1800
-CHUNK_OVERLAP=200
 ```
+
+All other settings (model name, chunk size, database paths, etc.) are configured with sensible defaults in `config/settings.py`.
 
 ## Dataset
 

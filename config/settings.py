@@ -3,7 +3,6 @@ Centralized configuration management for the TCS Multi-Agent Chatbot.
 """
 import os
 from pathlib import Path
-from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,41 +18,16 @@ class Settings(BaseSettings):
     
     # Google AI Configuration
     google_api_key: str
+    
+    # Hardcoded defaults (not configurable via .env)
     model_name: str = "gemini-3-flash-preview"
     embedding_model: str = "models/gemini-embedding-001"
-    temperature: float = 0.1
-    max_tokens: int = 8192
-    
-    # Database Configuration
     sqlite_db_path: str = "data/customers.db"
     chroma_persist_dir: str = "data/embeddings"
-    
-    # MCP Server Configuration
-    mcp_server_host: str = "localhost"
-    mcp_server_port: int = 8000
-    mcp_server_url: Optional[str] = None
-    
-    # Streamlit Configuration
-    streamlit_server_port: int = 8501
-    streamlit_server_address: str = "localhost"
-    
-    # PDF Processing
     pdf_upload_dir: str = "data/pdfs"
-    max_pdf_size_mb: int = 10
     chunk_size: int = 1800
     chunk_overlap: int = 200
-    
-    # Logging
-    log_level: str = "INFO"
-    log_file: str = "logs/app.log"
-    
-    @property
-    def mcp_url(self) -> str:
-        """Get the full MCP server URL."""
-        if self.mcp_server_url:
-            return self.mcp_server_url
-        return f"http://{self.mcp_server_host}:{self.mcp_server_port}"
-    
+
     @property
     def project_root(self) -> Path:
         """Get the project root directory."""
