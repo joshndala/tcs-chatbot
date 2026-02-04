@@ -89,7 +89,8 @@ def test_router():
         "Show me tickets for Adobe": "AccountAgent",
         "What is the refund policy?": "PolicyAgent",
         "How many customers bought GoPro?": "AccountAgent",
-        "Can I return a broken item after 30 days?": "PolicyAgent"
+        "Can I return a broken item after 30 days?": "PolicyAgent",
+        "Show me my recent tickets and explain the refund policy": "Both"
     }
     
     for query, expected in tests.items():
