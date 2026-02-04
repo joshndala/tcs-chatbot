@@ -1,6 +1,5 @@
 """
 PDF processing utilities for text extraction and chunking.
-Uses PyMuPDF (fitz) for fast, reliable PDF text extraction.
 """
 from typing import List, Dict, Any
 from pathlib import Path

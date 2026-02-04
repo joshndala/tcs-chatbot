@@ -12,7 +12,7 @@ from utils.prompts import (
     ACCOUNT_AGENT_PROMPT,
     ACCOUNT_RESPONSE_PROMPT,
     ERROR_PROMPT,
-    NO_RESULTS_PROMPT
+    ACCOUNT_NO_RESULTS
 )
 from agents.state import AgentState, AgentConfig
 
@@ -168,7 +168,7 @@ class AccountAgent:
             Formatted natural language response
         """
         if not results:
-            return NO_RESULTS_PROMPT
+            return ACCOUNT_NO_RESULTS
         
         # Convert results to readable format
         results_text = json.dumps(results, indent=2, default=str)
@@ -203,32 +203,34 @@ class AccountAgent:
             
             # Step 1: Generate SQL query
             sql_query = self.generate_sql(query)
-            state['sql_query'] = sql_query
             
             # Step 2: Execute query
             results = self.execute_query(sql_query)
-            state['db_results'] = results
             
             # Step 3: Format response
             response = self.format_response(query, results)
-            state['response'] = response
             
-            # Add assistant message
-            state['messages'].append({
-                'role': 'assistant',
-                'content': response
-            })
+            # Return partial update
+            return {
+                "sql_query": sql_query,
+                "db_results": results,
+                "response": response,
+                "messages": [{
+                    'role': 'assistant',
+                    'content': response
+                }]
+            }
             
         except Exception as e:
             error_message = ERROR_PROMPT.format(error=str(e))
-            state['error'] = str(e)
-            state['response'] = error_message
-            state['messages'].append({
-                'role': 'assistant',
-                'content': error_message
-            })
-        
-        return state
+            return {
+                "error": str(e),
+                "response": error_message,
+                "messages": [{
+                    'role': 'assistant',
+                    'content': error_message
+                }]
+            }
     
     def query_customer_by_name(self, name: str) -> Dict[str, Any]:
         """

@@ -11,7 +11,7 @@ from database.vector_store import vector_store
 from utils.prompts import (
     POLICY_AGENT_PROMPT,
     ERROR_PROMPT,
-    NO_RESULTS_PROMPT
+    POLICY_NO_RESULTS
 )
 from agents.state import AgentState, AgentConfig
 
@@ -99,7 +99,7 @@ class PolicyAgent:
             Generated response
         """
         if not context:
-            return NO_RESULTS_PROMPT
+            return POLICY_NO_RESULTS
         
         # Combine context chunks
         context_text = "\n\n".join(context)
@@ -135,28 +135,30 @@ class PolicyAgent:
             
             # Step 1: Retrieve relevant context
             context_chunks = self.retrieve_context(query, n_results=5)
-            state['search_results'] = context_chunks
             
             # Step 2: Generate response
             response = self.generate_response(query, context_chunks)
-            state['response'] = response
             
-            # Add assistant message
-            state['messages'].append({
-                'role': 'assistant',
-                'content': response
-            })
+            # Return partial update
+            return {
+                "search_results": context_chunks,
+                "response": response,
+                "messages": [{
+                    'role': 'assistant',
+                    'content': response
+                }]
+            }
             
         except Exception as e:
             error_message = ERROR_PROMPT.format(error=str(e))
-            state['error'] = str(e)
-            state['response'] = error_message
-            state['messages'].append({
-                'role': 'assistant',
-                'content': error_message
-            })
-        
-        return state
+            return {
+                "error": str(e),
+                "response": error_message,
+                "messages": [{
+                    'role': 'assistant',
+                    'content': error_message
+                }]
+            }
     
     def search_specific_document(
         self,

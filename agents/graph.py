@@ -2,7 +2,7 @@
 LangGraph workflow for multi-agent orchestration.
 Implements router and agent nodes with conditional routing.
 """
-from typing import Literal
+from typing import Literal, List, Union
 from google import genai
 from google.genai import types
 from langgraph.graph import StateGraph, END
@@ -113,7 +113,9 @@ class MultiAgentGraph:
         agent_type = "PolicyAgent" # Default
         
         # 1. Look for explicit classification line
-        if "Classification: AccountAgent" in response_text:
+        if "Classification: Both" in response_text:
+            agent_type = "Both"
+        elif "Classification: AccountAgent" in response_text:
             agent_type = "AccountAgent"
         elif "Classification: PolicyAgent" in response_text:
             agent_type = "PolicyAgent"
@@ -126,7 +128,7 @@ class MultiAgentGraph:
         
         return state
     
-    def route_query(self, state: AgentState) -> Literal["AccountAgent", "PolicyAgent"]:
+    def route_query(self, state: AgentState) -> Union[Literal["AccountAgent", "PolicyAgent"], List[Literal["AccountAgent", "PolicyAgent"]]]:
         """
         Routing function for conditional edges.
         
@@ -136,6 +138,8 @@ class MultiAgentGraph:
         Returns:
             Agent type to route to
         """
+        if state['agent_type'] == "Both":
+            return ["AccountAgent", "PolicyAgent"]
         return state['agent_type']
     
     def account_agent_node(self, state: AgentState) -> AgentState:

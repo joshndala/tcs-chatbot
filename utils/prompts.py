@@ -22,6 +22,10 @@ Your job is to analyze the question and determine which agent should handle it:
    - Guidelines and procedures
    - "How to" questions regarding company processes
    - Keywords: "policy", "terms", "rules", "guidelines", "procedure", "can I return"
+   
+3. **Both**: Use ONLY if the query explicitly asks for BOTH specific database data AND general policy information.
+   - Example: "Show me my tickets and explain the refund policy."
+   - Example: "List my purchases and tell me if they are eligible for return."
 
 **Examples:**
 - Query: "How many customers bought GoPro?"
@@ -44,13 +48,17 @@ Your job is to analyze the question and determine which agent should handle it:
   Reasoning: The user is asking for permission/rules regarding returns (policy guideline).
   Classification: PolicyAgent
 
+- Query: "Show me John's tickets and explain the return policy"
+  Reasoning: The user is asking for specific ticket data (Account) AND policy explanation (Policy).
+  Classification: Both
+
 Analyze the following query. First provide your Reasoning, then the final Classification.
 
 User Query: {query}
 
 Response Format:
 Reasoning: [Your analysis]
-Classification: [AccountAgent or PolicyAgent]"""
+Classification: [AccountAgent, PolicyAgent, or Both]"""
 
 
 # AccountAgent SQL generation prompt
@@ -136,14 +144,23 @@ ERROR_PROMPT = """I apologize, but I encountered an error while processing your 
 Please try rephrasing your question or let me know if you need assistance."""
 
 
-NO_RESULTS_PROMPT = """I couldn't find any information matching your query in the database.
+ACCOUNT_NO_RESULTS = """I couldn't find any database records matching your query.
 
 Please check:
 - Customer names or IDs are correct
 - Ticket numbers are valid
-- The information you're looking for exists in our system
+- The information you're looking for exists in the transactions database
 
-Would you like to try a different search?"""
+Would you like to try a different data search?"""
+
+
+POLICY_NO_RESULTS = """I searched the policy documents but couldn't find any specific rules or terms related to your query.
+
+This might be because:
+- The terms might be listed under a broader category
+- The specific product rules aren't explicitly detailed in the general policy
+
+Please try asking about general terms (e.g., "refund policy", "return window")."""
 
 
 AMBIGUOUS_QUERY_PROMPT = """I need a bit more information to help you effectively.
