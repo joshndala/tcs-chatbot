@@ -11,7 +11,8 @@ from database.vector_store import vector_store
 from utils.prompts import (
     POLICY_AGENT_PROMPT,
     ERROR_PROMPT,
-    POLICY_NO_RESULTS
+    POLICY_NO_RESULTS,
+    SYSTEM_PROMPT
 )
 from agents.state import AgentState, AgentConfig
 
@@ -37,6 +38,7 @@ class PolicyAgent:
             max_output_tokens=self.config.max_tokens,
             top_p=self.config.top_p,
             top_k=self.config.top_k,
+            system_instruction=SYSTEM_PROMPT,
             safety_settings=[
                 types.SafetySetting(
                     category="HARM_CATEGORY_HARASSMENT",

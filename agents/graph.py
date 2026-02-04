@@ -24,6 +24,7 @@ class MultiAgentGraph:
         self.router_config = types.GenerateContentConfig(
             temperature=0.3,
             max_output_tokens=1024,
+            system_instruction=SYSTEM_PROMPT,
             safety_settings=[
                 types.SafetySetting(
                     category="HARM_CATEGORY_HARASSMENT",

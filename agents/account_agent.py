@@ -12,7 +12,8 @@ from utils.prompts import (
     ACCOUNT_AGENT_PROMPT,
     ACCOUNT_RESPONSE_PROMPT,
     ERROR_PROMPT,
-    ACCOUNT_NO_RESULTS
+    ACCOUNT_NO_RESULTS,
+    SYSTEM_PROMPT
 )
 from agents.state import AgentState, AgentConfig
 
@@ -38,6 +39,7 @@ class AccountAgent:
             max_output_tokens=self.config.max_tokens,
             top_p=self.config.top_p,
             top_k=self.config.top_k,
+            system_instruction=SYSTEM_PROMPT,
             safety_settings=[
                 types.SafetySetting(
                     category="HARM_CATEGORY_HARASSMENT",
